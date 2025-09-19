@@ -1,0 +1,35 @@
+If you're already using NPM and a module bundler such as webpack or Rollup, you can run the following command to install the latest SDK (learn more):
+npm install firebase
+
+Then, initialise Firebase and begin using the SDKs for the products that you'd like to use.
+// Import the functions you need from the SDKs you need
+
+import { initializeApp } from "firebase/app";
+
+// TODO: Add SDKs for Firebase products that you want to use
+
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+
+// Your web app's Firebase configuration
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDzdm4NYJi7XMVXj7DPpd3PPpWP4OSZlQU",
+
+  authDomain: "week7-umair.firebaseapp.com",
+
+  projectId: "week7-umair",
+
+  storageBucket: "week7-umair.firebasestorage.app",
+
+  messagingSenderId: "12311454294",
+
+  appId: "1:12311454294:web:1125e0ca0d1d5b41d451f7"
+
+};
+
+
+// Initialize Firebase
+
+const app = initializeApp(firebaseConfig);

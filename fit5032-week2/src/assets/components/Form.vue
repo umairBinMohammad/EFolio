@@ -36,6 +36,23 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-6">
+              <label for="confirm-password" class="form-label"
+                >Confirm password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="confirm-password"
+                v-model="formData.confirmPassword"
+                @blur="() => validateConfirmPassword(true)"
+              />
+              <div v-if="errors.confirmPassword" class="text-danger">
+                {{ errors.confirmPassword }}
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
               <div class="form-check">
                 <input
                   type="checkbox"
@@ -64,7 +81,11 @@
               id="reason"
               rows="3"
               v-model="formData.reason"
+              @input="validateReason"
             ></textarea>
+            <div v-if="message.reason" class="text-success">
+              {{ message.reason }}
+            </div>
           </div>
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
@@ -109,6 +130,7 @@ import { ref } from 'vue';
 const formData = ref({
   username: '',
   password: '',
+  confirmPassword: '', // Added for password confirmation
   isAustralian: false,
   reason: '',
   gender: '',
@@ -119,6 +141,11 @@ const submittedCards = ref([]);
 const errors = ref({
   username: null,
   password: null,
+  confirmPassword: null, // Added for password confirmation errors
+});
+
+const message = ref({
+  reason: null, // Added for the 'Reason for joining' success message
 });
 
 const validateName = (blur) => {
@@ -152,11 +179,32 @@ const validatePassword = (blur) => {
   }
 };
 
+const validateConfirmPassword = (blur) => {
+  if (formData.value.password !== formData.value.confirmPassword) {
+    if (blur) errors.value.confirmPassword = 'Passwords do not match.';
+  } else {
+    errors.value.confirmPassword = null;
+  }
+};
+
+const validateReason = () => {
+  if (formData.value.reason.toLowerCase().includes('friend')) {
+    message.value.reason = 'Great to have a friend';
+  } else {
+    message.value.reason = null;
+  }
+};
+
 const submitForm = () => {
   validateName(true);
   validatePassword(true);
+  validateConfirmPassword(true);
 
-  if (!errors.value.username && !errors.value.password) {
+  if (
+    !errors.value.username &&
+    !errors.value.password &&
+    !errors.value.confirmPassword
+  ) {
     submittedCards.value.push({ ...formData.value });
     clearForm();
   }
@@ -165,11 +213,14 @@ const submitForm = () => {
 const clearForm = () => {
   formData.value.username = '';
   formData.value.password = '';
+  formData.value.confirmPassword = '';
   formData.value.isAustralian = false;
   formData.value.reason = '';
   formData.value.gender = '';
   errors.value.username = null;
   errors.value.password = null;
+  errors.value.confirmPassword = null;
+  message.value.reason = null;
 };
 </script>
 
