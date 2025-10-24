@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages (branch-based)
+name: Build into docs and publish (main/docs)
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  build-and-commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,14 +29,24 @@ jobs:
         run: npm run build
         working-directory: docs
 
-      - name: Add SPA fallback 404.html
-        run: cp dist/index.html dist/404.html
+      - name: Prepare SPA fallback
+        run: |
+          cp dist/index.html dist/404.html
         working-directory: docs
 
-      - name: Deploy to gh-pages branch root
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+      - name: Copy build into docs folder
+        run: |
+          cp -r dist/* .
+        working-directory: docs
+
+      - name: Remove dist (optional cleanup)
+        run: |
+          rm -rf dist
+        working-directory: docs
+
+      - name: Commit built files to main/docs
+        uses: EndBug/add-and-commit@v9
         with:
-          branch: gh-pages
-          folder: docs/dist
-          clean: true
-          single-commit: true
+          add: 'docs'
+          default_author: github_actions
+          message: 'chore: publish built site to docs [skip ci]'
