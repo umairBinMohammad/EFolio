@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main
+      - gh-pages
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'github-actions[bot]' }}
 
     steps:
     - name: Checkout
@@ -20,15 +23,21 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
+      working-directory: fit5032-week2
 
     - name: Build
       run: npm run build
+      working-directory: fit5032-week2
+
+    - name: Add SPA fallback 404.html
+      run: cp dist/index.html dist/404.html
+      working-directory: fit5032-week2
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
         branch: gh-pages
-        folder: dist
+        folder: fit5032-week2/dist
 
 permissions:
   contents: write
