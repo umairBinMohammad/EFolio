@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import App from '@/App.vue'
 import FirebaseSigninView from '@/assets/components/FirebaseSigninView.vue'
 import HomeView from '@/assets/components/HomeView.vue'
 import FirebaseRegisterView from '@/assets/components/FirebaseRegisterView.vue'
@@ -29,7 +28,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // Use Vite's base URL so routes work under /EFolio/ on GitHub Pages
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 
